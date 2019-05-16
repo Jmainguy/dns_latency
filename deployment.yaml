@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnslatency
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: dnslatency
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: dnslatency
+        deploymentconfig: dnslatency
+    spec:
+      containers:
+      - image: docker-registry.default.svc:5000/jmainguy-dns/dnslatency
+        imagePullPolicy: Always
+        name: dnslatency
+        resources:
+            limits:
+                cpu: "1"
+                memory: "1Gi"
+            requests:
+                cpu: "1"
+                memory: "1Gi"
+
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
